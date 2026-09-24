@@ -1,0 +1,14 @@
+{
+  "provider": "ollama",
+  "model": null,
+  "ollama_host": "",
+  "openai_base_url": "",
+  "gemini_base_url": "",
+  "temperature": 0.2,
+  "max_steps": 30,
+  "max_context_tokens": 32000,
+  "max_tool_output_chars": 12000,
+  "confirm_mode": "ask",
+  "stream": true,
+  "use_native_tools": true
+}
