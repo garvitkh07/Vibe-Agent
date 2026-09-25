@@ -4,7 +4,7 @@ from pathlib import Path
 
 from vibe_agent.config import AgentConfig
 from vibe_agent.tools.base import ExecContext
-from vibe_agent.tools.filesystem import DeletePath, EditFile, WriteFile
+from vibe_agent.tools.filesystem import DeletePath, EditFile, ReadFile, WriteFile
 from vibe_agent.tools.search import FindFiles, SearchFiles
 
 
@@ -35,6 +35,22 @@ class TestFilesystem(unittest.TestCase):
         r = WriteFile().run({"path": "README.md", "content": "clobbered"}, ctx)
         self.assertFalse(r.success)
         self.assertEqual((self.root / "README.md").read_text(), "# demo\n")
+
+    def test_read_file_from_start_line(self):
+        (self.root / "notes.txt").write_text(
+            "line one\nline two\nline three\n"
+        )
+
+        r = ReadFile().run(
+            {"path": "notes.txt", "start_line": 2},
+            _ctx(self.root),
+        )
+
+        self.assertTrue(r.success)
+        self.assertIn("lines 2-3 of 3", r.output)
+        self.assertIn("line two", r.output)
+        self.assertIn("line three", r.output)
+        self.assertNotIn("line one", r.output)
 
     def test_edit_exact_match(self):
         r = EditFile().run(
