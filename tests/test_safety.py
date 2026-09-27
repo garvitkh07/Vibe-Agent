@@ -1,5 +1,6 @@
 import unittest
 
+from vibe_agent.config import AgentConfig
 from vibe_agent.safety import ALLOW, ASK, DENY, classify
 
 
@@ -35,6 +36,14 @@ class TestSafetyClassifier(unittest.TestCase):
             verdict, _ = classify(cmd)
             self.assertEqual(verdict, ASK, cmd)
 
+    def test_ask_inline_python(self):
+        for cmd in [
+            'python -c "print(1)"',
+            'python3 -c "print(1)"',
+        ]:
+            verdict, _ = classify(cmd)
+            self.assertEqual(verdict, ASK, cmd)
+
     def test_allow_safe(self):
         for cmd in [
             "ls -la",
@@ -62,8 +71,10 @@ class TestSafetyClassifier(unittest.TestCase):
     def test_compound_takes_worst(self):
         verdict, _ = classify("ls && rm -rf /")
         self.assertEqual(verdict, DENY)
+
         verdict, _ = classify("pytest -q && git push --force")
         self.assertEqual(verdict, ASK)
+
         verdict, _ = classify("pytest -q; git status")
         self.assertEqual(verdict, ALLOW)
 

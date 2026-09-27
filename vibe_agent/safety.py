@@ -66,6 +66,7 @@ ASK_PATTERNS: List[Tuple[str, str]] = [
     (r"\bpip(?:3)?\s+install\s+[^;&|]*(?:--user|--break-system-packages|-U|--upgrade)\b",
      "global/user pip upgrade or override"),
     (r"\bnpx\b", "npx executes arbitrary packages"),
+    (r"\bpython(?:3)?\s+-c\b", "inline Python code execution"),
     (r"\bchmod\s+-R\b", "recursive permission change"),
     (r"\bchown\s+-R\b", "recursive ownership change"),
     (r"\bcurl\b|\bwget\b", "network request (data leaves the machine)"),
